@@ -18,34 +18,6 @@ export default function App() {
   const navigate = useNavigate ? useNavigate() : null;
   const location = useLocation ? useLocation() : { pathname: '/' };
 
-  // Sync Clerk user to backend DB on sign in
-  useEffect(() => {
-    const syncUser = async () => {
-      if (isSignedIn && user) {
-        try {
-          const token = await getToken();
-          await axios.post(
-            '/api/auth/login',
-            {
-              clerkUserId: user.id,
-              email:
-                user.primaryEmailAddress?.emailAddress ||
-                user.emailAddresses?.[0]?.emailAddress ||
-                '',
-            },
-            {
-              headers: { Authorization: `Bearer ${token}` },
-              withCredentials: true,
-            }
-          );
-        } catch (err) {
-          // Optionally handle error
-        }
-      }
-    };
-    syncUser();
-  }, [isSignedIn, user, getToken]);
-
   // Redirect to dashboard only if coming from signin/signup
   useEffect(() => {
     if (
