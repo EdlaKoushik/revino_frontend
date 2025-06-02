@@ -6,8 +6,8 @@ import axios from 'axios'
 import App from './App.jsx'
 import './index.css'
 
-// Set axios defaults
-axios.defaults.baseURL = 'http://localhost:5001'
+// Use backend URL from .env
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
 axios.defaults.withCredentials = true
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
