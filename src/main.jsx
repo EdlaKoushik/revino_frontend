@@ -7,7 +7,7 @@ import App from './App.jsx'
 import './index.css'
 
 // Set axios defaults
-axios.defaults.baseURL = 'http://localhost:5001'
+axios.defaults.baseURL = 'https://revino-backend.vercel.app'
 axios.defaults.withCredentials = true
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
