@@ -7,7 +7,7 @@ import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { useAuth } from "@clerk/clerk-react";
 import { Toaster, toast } from "react-hot-toast";
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import toggleImg from '../assets/toggle.png';
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
@@ -21,8 +21,37 @@ const InterviewCreationPage = () => {
   const [jobDesc, setJobDesc] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [pastResumes, setPastResumes] = useState([]);
+  const [pastJobDescs, setPastJobDescs] = useState([]);
+  const [selectedResume, setSelectedResume] = useState('');
+  const [selectedJobDesc, setSelectedJobDesc] = useState('');
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleHour, setScheduleHour] = useState('');
+  const [scheduleMinute, setScheduleMinute] = useState('');
+  const [scheduleSecond, setScheduleSecond] = useState('');
+  const [scheduleAmpm, setScheduleAmpm] = useState('');
   const navigate = useNavigate();
-  const { getToken } = useAuth();
+  const { getToken, user } = useAuth();
+
+  // Fetch past resumes and job descriptions
+  React.useEffect(() => {
+    const fetchPastMaterials = async () => {
+      if (!user) return;
+      try {
+        const token = await getToken();
+        const res = await axios.get('/api/interview/past-materials', {
+          params: { userId: user.id },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPastResumes(res.data.resumes || []);
+        setPastJobDescs(res.data.jobDescs || []);
+      } catch (err) {
+        // ignore
+      }
+    };
+    fetchPastMaterials();
+  }, [user, getToken]);
 
   const handleResumeUpload = async (file) => {
     setResume(file);
@@ -66,6 +95,44 @@ const InterviewCreationPage = () => {
       if (!token) {
         toast.error("Not authenticated. Please sign in.");
         throw new Error("Not authenticated. Please sign in.");
+      }
+      // If scheduling fields are filled, schedule the mock
+      if (scheduleDate && scheduleHour && scheduleMinute && scheduleSecond && scheduleAmpm) {
+        let h = parseInt(scheduleHour, 10);
+        if (scheduleAmpm === 'PM' && h !== 12) h += 12;
+        if (scheduleAmpm === 'AM' && h === 12) h = 0;
+        const hourStr = h.toString().padStart(2, '0');
+        const time24 = `${hourStr}:${scheduleMinute}:${scheduleSecond}`;
+        const isoString = `${scheduleDate}T${time24}`;
+        const scheduledFor = new Date(isoString);
+        if (isNaN(scheduledFor.getTime())) {
+          setError('Invalid date or time. Please check your input.');
+          setLoading(false);
+          return;
+        }
+        await axios.post('/api/schedule-mock', {
+          userId: user.id,
+          email: user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress,
+          scheduledFor,
+          mode,
+          jobRole: role,
+          industry,
+          experience,
+          resumeText,
+          jobDescription: jobDesc,
+        }, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.dismiss();
+        toast.success('Mock interview scheduled! Confirmation sent to your email.', {
+          duration: 2500,
+          position: 'top-right',
+          style: { background: '#6c47ff', color: '#fff', fontWeight: 600 },
+          iconTheme: { primary: '#fff', secondary: '#6c47ff' },
+        });
+        setTimeout(() => navigate('/dashboard'), 1200);
+        setLoading(false);
+        return;
       }
       // 1. Create interview session
       const createRes = await axios.post('/api/interview/create', {
@@ -232,13 +299,36 @@ const InterviewCreationPage = () => {
             </div>
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1">
-                <label className="block text-md font-semibold mb-2">Upload Resume (PDF)</label>
+                <label className="block text-md font-semibold mb-2">Resume</label>
+                {pastResumes.length > 0 && (
+                  <select className="w-full border rounded-lg px-3 py-2 mb-2" value={selectedResume} onChange={e => {
+                    setSelectedResume(e.target.value);
+                    setResume(null);
+                    setResumeText(e.target.value);
+                  }}>
+                    <option value="">Select previously used resume</option>
+                    {pastResumes.map((r, i) => (
+                      <option key={i} value={r.slice(0, 100)}>{r.slice(0, 100)}...</option>
+                    ))}
+                  </select>
+                )}
                 <ResumeUpload onFile={handleResumeUpload} file={resume} />
                 {loading && <div className="text-xs text-blue-600 mt-2">Extracting text from PDF...</div>}
                 {error && <div className="text-xs text-red-600 mt-2">{error}</div>}
               </div>
               <div className="flex-1">
-                <label className="block text-md font-semibold mb-2">Paste Job Description</label>
+                <label className="block text-md font-semibold mb-2">Job Description</label>
+                {pastJobDescs.length > 0 && (
+                  <select className="w-full border rounded-lg px-3 py-2 mb-2" value={selectedJobDesc} onChange={e => {
+                    setSelectedJobDesc(e.target.value);
+                    setJobDesc(e.target.value);
+                  }}>
+                    <option value="">Select previously used job description</option>
+                    {pastJobDescs.map((j, i) => (
+                      <option key={i} value={j.slice(0, 100)}>{j.slice(0, 100)}...</option>
+                    ))}
+                  </select>
+                )}
                 <textarea
                   className="w-full border rounded-lg px-3 py-2 min-h-[160px] bg-[#fafbff] placeholder:text-gray-400"
                   value={jobDesc}
@@ -247,6 +337,7 @@ const InterviewCreationPage = () => {
                 />
               </div>
             </div>
+           
             <div className="flex flex-col gap-2 bg-[#f7f7fb] rounded-xl shadow-inner p-6">
               <div className="flex items-center gap-3 text-lg">
                 <span className="bg-[#f3f0ff] p-2 rounded-full"><FaRegKeyboard className={`text-xl ${mode==='text' ? 'text-[#6c47ff]' : 'text-gray-400'}`} /></span>
