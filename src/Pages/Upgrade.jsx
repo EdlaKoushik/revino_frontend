@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SubscriptionPlan from '../components/SubscriptionPlan';
 import InvoiceViewer from '../components/InvoiceViewer';
+import logo from '../assets/logo.png';
 
 const Upgrade = () => {
   const { isSignedIn, getToken } = useAuth();
@@ -60,7 +61,7 @@ const Upgrade = () => {
       {/* Sticky Navbar */}
       <nav className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-12 py-5 bg-white shadow-sm">
         <div className="flex items-center gap-2">
-          <img src="/vite.svg" alt="logo" className="h-7 w-7 cursor-pointer" onClick={() => window.location.href = '/dashboard'} />
+          {/* <img src={logo} alt="logo" className="h-7 w-auto cursor-pointer" style={{ borderRadius: 0 }} onClick={() => window.location.href = '/dashboard'} /> */}
           <span className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer" onClick={() => window.location.href = '/dashboard'}>
             AI Interview Prep
           </span>

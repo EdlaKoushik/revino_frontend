@@ -6,6 +6,7 @@ import { FaHistory, FaCalendarAlt, FaClock, FaMicrophone, FaRegKeyboard, FaVideo
 import plusImg from '../assets/plus.png';
 import { toast } from 'react-hot-toast';
 import ScheduledMocksList from '../components/ScheduledMocksList';
+import logo from '../assets/logo.png';
 
 const Dashboard = () => {
   const [interviews, setInterviews] = useState([]);
@@ -71,7 +72,7 @@ const Dashboard = () => {
           {/* Navbar */}
           <nav className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-12 py-5 bg-white shadow-sm">
             <div className="flex items-center gap-2">
-              <img src="/vite.svg" alt="logo" className="h-7 w-7 cursor-pointer" onClick={() => window.location.href = '/dashboard'} />
+            
               <span className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer" onClick={() => window.location.href = '/dashboard'}>
                 AI Interview Prep App
               </span>

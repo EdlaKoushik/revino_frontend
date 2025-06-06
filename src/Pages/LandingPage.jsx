@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { SignedIn, SignedOut, useUser, SignInButton, SignUpButton } from '@clerk/clerk-react';
 import { Toaster } from 'react-hot-toast';
 import heroImg from '../assets/heroimage.png';
+import logo from '../assets/logo.png';
 
 const LandingPage = () => {
   return (
@@ -28,17 +29,18 @@ const LandingPage = () => {
           {/* Navbar */}
           <nav className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-12 py-5 bg-white shadow-sm">
             <div className="flex items-center gap-2">
-              <img
-                src="/vite.svg"
-                alt="logo"
-                className="h-7 w-7 cursor-pointer"
+              {/* <img
+                src={logo}
+                alt="Logo"
+                className="h-8 w-auto bg-white p-1 cursor-pointer"
+                style={{ borderRadius: 0 }}
                 onClick={() => window.location.href = '/'}
-              />
+              /> */}
               <span
                 className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer"
                 onClick={() => window.location.href = '/'}
               >
-                AI Interview Prep App
+                AI Interview Prep
               </span>
             </div>
             <div className="flex items-center gap-8">
@@ -209,7 +211,8 @@ const LandingPage = () => {
           {/* Footer */}
           <footer className="w-full flex flex-col md:flex-row items-center justify-between px-8 py-4 bg-white border-t border-gray-200 text-sm mt-auto gap-2">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-[#6c47ff]">© 2025 AI Interview Prep App</span>
+              <img src={logo} alt="Logo" className="h-6 w-auto bg-white p-1" style={{ borderRadius: 0 }} />
+              <span className="font-bold text-[#6c47ff]">© {new Date().getFullYear()} AI Interview Prep</span>
             </div>
             <div className="flex gap-4">
               <a href="#" className="text-gray-400 hover:text-[#6c47ff]" aria-label="LinkedIn"><i className="fa-brands fa-linkedin text-lg"></i></a>

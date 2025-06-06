@@ -9,6 +9,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { Toaster, toast } from "react-hot-toast";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import toggleImg from '../assets/toggle.png';
+import logo from '../assets/logo.png';
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const InterviewCreationPage = () => {
@@ -274,7 +275,7 @@ const InterviewCreationPage = () => {
       {/* Navbar - improved: sticky, full-width, visually distinct */}
       <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-12 py-5 bg-white shadow-lg border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <img src="/vite.svg" alt="logo" className="h-7 w-7 cursor-pointer" onClick={() => window.location.href = '/dashboard'} />
+          <img src={logo} alt="logo" className="h-7 w-auto cursor-pointer" style={{ borderRadius: 0 }} onClick={() => window.location.href = '/dashboard'} />
           <span className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer" onClick={() => window.location.href = '/dashboard'}>
             AI Interview Prep App
           </span>
