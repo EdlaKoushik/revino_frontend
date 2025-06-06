@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FaCalendarAlt, FaClock, FaTrash, FaCheckCircle, FaTimesCircle, FaPlayCircle } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
-const ScheduledMocksList = ({ refresh, onRefreshed }) => {
+const ScheduledMocksList = ({ refresh, onRefreshed, cardClass }) => {
   const { user } = useUser();
   const { getToken } = useAuth();
   const [mocks, setMocks] = useState([]);
@@ -30,7 +30,6 @@ const ScheduledMocksList = ({ refresh, onRefreshed }) => {
       }
     };
     if (user) fetchMocks();
-    // Only refetch when user or refresh changes
   }, [user, getToken, refresh]);
 
   const handleDelete = async (id) => {
@@ -56,7 +55,6 @@ const ScheduledMocksList = ({ refresh, onRefreshed }) => {
   };
 
   const handleTake = async (mock) => {
-    // Create a new interview session with the scheduled details, then navigate to it
     try {
       const token = await getToken();
       const createRes = await axios.post('/api/interview/create', {
@@ -87,15 +85,16 @@ const ScheduledMocksList = ({ refresh, onRefreshed }) => {
   if (!mocks.length) return (<div className="text-gray-500">No scheduled mocks found.</div>);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <>
       {mocks.map((mock) => {
         const dateObj = new Date(mock.scheduledFor);
         const now = new Date();
         const isExpired = dateObj < now;
         const dateStr = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-        const timeStr = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        const timeStr = dateObj.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: true });
+
         return (
-          <div key={mock._id} className="bg-white rounded-xl shadow p-6 flex flex-col gap-2 border border-[#f3f0ff] relative group">
+          <div key={mock._id} className={`${cardClass} relative`}>
             <button
               className="absolute top-3 right-3 text-gray-400 hover:text-red-600 text-lg opacity-70 hover:opacity-100 transition"
               onClick={() => handleDelete(mock._id)}
@@ -103,6 +102,7 @@ const ScheduledMocksList = ({ refresh, onRefreshed }) => {
             >
               <FaTrash />
             </button>
+
             <div className="flex items-center gap-2 text-[#6c47ff] font-bold text-lg mb-1">
               <FaCalendarAlt /> {dateStr}
             </div>
@@ -110,22 +110,26 @@ const ScheduledMocksList = ({ refresh, onRefreshed }) => {
               <FaClock /> {timeStr}
             </div>
             <div className="text-gray-500 text-xs mb-2">Email: {mock.email}</div>
-            <div className="flex gap-2 items-center mt-2">
+
+            <div className="flex gap-2 items-center mt-auto pt-2">
               {isExpired ? (
                 <span className="flex items-center gap-1 text-xs text-gray-400"><FaTimesCircle className="text-red-400" />Expired</span>
               ) : (
-                <span className="flex items-center gap-1 text-xs text-green-600"><FaCheckCircle />Upcoming</span>
-              )}
-              {!isExpired && (
-                <button className="ml-auto flex items-center gap-1 px-3 py-1 bg-[#6c47ff] text-white rounded-lg text-xs font-semibold shadow hover:bg-[#4f2fcf] transition" onClick={() => handleTake(mock)}>
-                  <FaPlayCircle /> Take
-                </button>
+                <>
+                  <span className="flex items-center gap-1 text-xs text-green-600"><FaCheckCircle />Upcoming</span>
+                  <button
+                    className="ml-auto flex items-center gap-1 px-3 py-1 bg-[#6c47ff] text-white rounded-lg text-xs font-semibold shadow hover:bg-[#4f2fcf] transition"
+                    onClick={() => handleTake(mock)}
+                  >
+                    <FaPlayCircle /> Take
+                  </button>
+                </>
               )}
             </div>
           </div>
         );
       })}
-    </div>
+    </>
   );
 };
 

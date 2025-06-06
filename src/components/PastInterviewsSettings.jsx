@@ -14,6 +14,7 @@ const PastInterviewsSettings = () => {
       setLoading(true);
       try {
         const token = await getToken();
+        // Revert: do not filter by userId, let backend handle filtering or return all
         const res = await axios.get('/api/interview/all', {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true,

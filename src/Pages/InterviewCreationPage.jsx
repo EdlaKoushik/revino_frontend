@@ -31,17 +31,19 @@ const InterviewCreationPage = () => {
   const [scheduleMinute, setScheduleMinute] = useState('');
   const [scheduleSecond, setScheduleSecond] = useState('');
   const [scheduleAmpm, setScheduleAmpm] = useState('');
+  const [plan, setPlan] = useState('Free');
   const navigate = useNavigate();
   const { getToken, user } = useAuth();
+  const { user: userObj } = useUser(); // Get Clerk user object
 
   // Fetch past resumes and job descriptions
   React.useEffect(() => {
     const fetchPastMaterials = async () => {
-      if (!user) return;
+      if (!userObj) return;
       try {
         const token = await getToken();
         const res = await axios.get('/api/interview/past-materials', {
-          params: { userId: user.id },
+          params: { userId: userObj.id },
           headers: { Authorization: `Bearer ${token}` },
         });
         setPastResumes(res.data.resumes || []);
@@ -51,7 +53,25 @@ const InterviewCreationPage = () => {
       }
     };
     fetchPastMaterials();
-  }, [user, getToken]);
+  }, [userObj, getToken]);
+
+  // Fetch user plan for gating interview creation
+  React.useEffect(() => {
+    const fetchPlan = async () => {
+      if (!userObj) return;
+      try {
+        const token = await getToken();
+        const res = await axios.get('/api/user/plan', {
+          params: { clerkUserId: userObj.id },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPlan(res.data.plan || 'Free');
+      } catch {
+        setPlan('Free');
+      }
+    };
+    fetchPlan();
+  }, [userObj, getToken, loading]); // Only use defined dependencies
 
   const handleResumeUpload = async (file) => {
     setResume(file);
@@ -89,6 +109,34 @@ const InterviewCreationPage = () => {
       toast.error("Please fill in all required fields");
       setLoading(false);
       return;
+    }
+    // --- Free plan gating (frontend UX) ---
+    if (plan === 'Free') {
+      try {
+        const token = await getToken();
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const res = await axios.get('/api/interview/all', {
+          params: { userId: userObj.id },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const thisMonthCount = (res.data.interviews || []).filter(i => {
+          const created = new Date(i.createdAt);
+          return created >= startOfMonth;
+        }).length;
+        // --- Add backend check for plan in case admin changed it ---
+        if (res.data.userPlan === 'Premium' || plan === 'Premium') {
+          // User is now premium, skip limit
+        } else if (thisMonthCount >= 3) {
+          toast.dismiss();
+          toast.error('Free plan: Only 3 mock interviews allowed per month. Upgrade to Premium for unlimited access.');
+          setError('Free plan: Only 3 mock interviews allowed per month. Upgrade to Premium for unlimited access.');
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        // fallback: let backend enforce
+      }
     }
     try {
       const token = await getToken();
@@ -142,6 +190,8 @@ const InterviewCreationPage = () => {
         experience,
         jobDescription: jobDesc,
         resumeText,
+        userId: userObj?.id, // Use Clerk user object for id
+        email: userObj?.primaryEmailAddress?.emailAddress || userObj?.emailAddresses?.[0]?.emailAddress // Use Clerk user object for email
       }, {
         headers: { 'Authorization': `Bearer ${token}` },
       });

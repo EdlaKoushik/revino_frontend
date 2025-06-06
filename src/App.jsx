@@ -28,7 +28,7 @@ export default function App() {
 
     const currentPath = location.pathname;
 
-    const publicPaths = ['/', '/signin', '/signup'];
+    const publicPaths = ['/'];
     const isOnPublicPage = publicPaths.includes(currentPath);
 
     const protectedPaths = [
@@ -51,8 +51,6 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/signin" element={<Login />} />
-      <Route path="/signup" element={<Register />} />
       <Route path="/dashboard" element={<SignedIn><Dashboard /></SignedIn>} />
       <Route path="/upgrade" element={<SignedIn><Upgrade /></SignedIn>} />
       <Route path="/settings" element={<SignedIn><Settings /></SignedIn>} />

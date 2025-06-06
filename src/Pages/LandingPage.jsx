@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, useUser, SignInButton, SignUpButton } from '@clerk/clerk-react';
 import { Toaster } from 'react-hot-toast';
 import heroImg from '../assets/heroimage.png';
 
 const LandingPage = () => {
-  // Redirect signed-in users to dashboard
   return (
     <>
-     
       <SignedOut>
         <div className="min-h-screen bg-[#f7f7fb] flex flex-col">
           <Toaster
@@ -26,11 +24,19 @@ const LandingPage = () => {
               },
             }}
           />
-          {/* Navbar for signed-out users only */}
+          
+          {/* Navbar */}
           <nav className="sticky top-0 z-20 flex items-center justify-between px-4 md:px-12 py-5 bg-white shadow-sm">
             <div className="flex items-center gap-2">
-              <img src="/vite.svg" alt="logo" className="h-7 w-7 cursor-pointer" onClick={() => window.location.href = '/'} />
-              <span className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer" onClick={() => window.location.href = '/'}
+              <img
+                src="/vite.svg"
+                alt="logo"
+                className="h-7 w-7 cursor-pointer"
+                onClick={() => window.location.href = '/'}
+              />
+              <span
+                className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer"
+                onClick={() => window.location.href = '/'}
               >
                 AI Interview Prep App
               </span>
@@ -41,8 +47,16 @@ const LandingPage = () => {
               <a href="#faq" className="text-base font-medium text-gray-800 hover:text-[#6c47ff] transition">FAQ</a>
             </div>
             <div className="flex items-center gap-4">
-              <a href="/signin" className="px-6 py-2 rounded-lg border border-[#d1d5db] bg-white text-[#6c47ff] font-semibold text-base shadow-sm hover:bg-[#f3f0ff] transition">Sign In</a>
-              <a href="/signup" className="px-6 py-2 rounded-lg bg-[#6c47ff] text-white font-semibold text-base shadow-sm hover:bg-[#4f2fcf] transition">Get Started</a>
+              <SignInButton mode="modal">
+                <button className="px-6 py-2 rounded-lg border border-[#d1d5db] bg-white text-[#6c47ff] font-semibold text-base shadow-sm hover:bg-[#f3f0ff] transition">
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="px-6 py-2 rounded-lg bg-[#6c47ff] text-white font-semibold text-base shadow-sm hover:bg-[#4f2fcf] transition">
+                  Get Started
+                </button>
+              </SignUpButton>
             </div>
           </nav>
 
@@ -55,7 +69,11 @@ const LandingPage = () => {
               <p className="text-lg text-gray-700 mb-8 max-w-xl">
                 Practice real interview questions, get instant feedback, and track your progress. Unlock premium features for unlimited mock interviews, advanced analytics, and more.
               </p>
-              <a href="/signup" className="inline-block px-8 py-4 rounded-xl bg-[#6c47ff] text-white font-bold text-lg shadow hover:bg-[#4f2fcf] transition">Get Started Free</a>
+              <SignUpButton mode="modal">
+  <button className="inline-block px-8 py-4 rounded-xl bg-[#6c47ff] text-white font-bold text-lg shadow hover:bg-[#4f2fcf] transition">
+    Get Started Free
+  </button>
+</SignUpButton>
             </div>
             <div className="flex-1 flex justify-center items-center mt-12 md:mt-0">
               <img src={heroImg} alt="AI Interview Prep" className="w-full max-w-md rounded-2xl shadow-xl" />
