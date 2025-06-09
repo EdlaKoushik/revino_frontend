@@ -99,22 +99,26 @@ const FeedbackPage = () => {
             <span className="text-xs text-gray-500">({total} questions)</span>
           </h2>
           {interview.questions.map((q, idx) => (
-            <div key={idx} className="mb-5 p-4 rounded-lg border border-gray-100 bg-[#fafbff] shadow-sm">
-              <div className="font-semibold text-[#6c47ff] mb-1 flex items-center gap-2">
+            <div key={idx} className="mb-7 p-5 rounded-xl border border-gray-100 bg-[#fafbff] shadow-sm">
+              <div className="font-semibold text-[#6c47ff] mb-2 flex items-center gap-2 text-lg">
                 <span>Q{idx + 1}:</span> <span>{q}</span>
               </div>
-              <div className="text-gray-700 mb-1 flex items-center gap-2">
-                <span className="font-medium">Your answer:</span>
-                {interview.answers?.[idx] ? (
-                  <span className="text-gray-900">{interview.answers[idx]}</span>
-                ) : (
-                  <span className="italic text-gray-400">No answer</span>
-                )}
+              <div className="mb-2">
+                <div className="font-medium text-gray-800 mb-1">Your Answer:</div>
+                <div className={`rounded-lg p-3 bg-white border ${interview.answers?.[idx] ? 'border-[#6c47ff]' : 'border-gray-200'} text-gray-900`}>{interview.answers?.[idx] || <span className="italic text-gray-400">No answer</span>}</div>
               </div>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="font-medium text-green-700">Feedback:</span>
-                <span>{interview.feedback?.[idx] || <span className="italic text-gray-400">No feedback</span>}</span>
-                {getBadge(interview.feedback?.[idx])}
+              <div className="mb-2">
+                <div className="font-medium text-green-700 mb-1">Ideal Answer:</div>
+                <div className="rounded-lg p-3 bg-[#f7f7fb] border border-green-200 text-green-900">
+                  {interview.idealAnswers?.[idx] || <span className="italic text-gray-400">No ideal answer available.</span>}
+                </div>
+              </div>
+              <div className="mb-2">
+                <div className="font-medium text-[#6c47ff] mb-1">Comparison & Feedback:</div>
+                <div className="rounded-lg p-3 bg-[#f3f0ff] border border-[#e0d7ff] text-gray-900 flex items-center gap-2">
+                  <span>{interview.feedback?.[idx] || <span className="italic text-gray-400">No feedback</span>}</span>
+                  {getBadge(interview.feedback?.[idx])}
+                </div>
               </div>
             </div>
           ))}
