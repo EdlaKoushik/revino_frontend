@@ -3,7 +3,6 @@ import { useAuth, useUser, SignedIn, SignedOut, SignInButton, UserButton } from 
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SubscriptionPlan from '../components/SubscriptionPlan';
-import InvoiceViewer from '../components/InvoiceViewer';
 import logo from '../assets/logo.png';
 
 const Upgrade = () => {
@@ -103,9 +102,7 @@ const Upgrade = () => {
             <SubscriptionPlan currentPlan={currentPlan} onUpgrade={handleUpgrade} />
           </div>
           {loading && <div className="mt-4 text-[#6c47ff]">Redirecting to payment...</div>}
-          <div className="bg-white rounded-2xl shadow-xl p-0 w-full max-w-2xl text-center mt-12">
-            <InvoiceViewer />
-          </div>
+          {/* Removed Billing History from Upgrade page for professionalism and to avoid redundancy */}
         </div>
       )}
     </div>

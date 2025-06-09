@@ -82,7 +82,7 @@ const Settings = () => {
               </div>
             </div>
           </div>
-          <div className="mb-2">
+          <div className="mb-8">
             <h3 className="font-semibold text-lg mb-3 text-[#6c47ff]">Billing History</h3>
             <div className="bg-[#f7f7fb] rounded-xl p-5 border border-gray-100">
               <InvoiceViewer />
@@ -97,8 +97,6 @@ const Settings = () => {
           <div className="flex flex-col gap-3 bg-[#f7f7fb] rounded-xl p-5 border border-gray-100">
             <h3 className="font-semibold text-lg mb-3 text-[#6c47ff]">Account Actions</h3>
             <div className="flex flex-col gap-3">
-              <button onClick={() => openUserProfileModal()} className="w-full py-2 rounded-lg bg-[#f3f0ff] text-[#6c47ff] font-semibold shadow hover:bg-[#e0d7ff] transition">Manage Profile</button>
-              <button onClick={() => openUserProfilePasswordModal()} className="w-full py-2 rounded-lg bg-[#f3f0ff] text-[#6c47ff] font-semibold shadow hover:bg-[#e0d7ff] transition">Change Password</button>
               <button onClick={() => openUserProfileDeleteModal()} className="w-full py-2 rounded-lg bg-red-50 text-red-600 font-semibold shadow hover:bg-red-100 transition">Delete Account</button>
               <button onClick={() => signOut()} className="w-full py-2 rounded-lg border border-[#6c47ff] text-[#6c47ff] font-semibold shadow hover:bg-[#f3f0ff] transition">Sign Out</button>
             </div>
