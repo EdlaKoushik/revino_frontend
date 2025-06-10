@@ -10,7 +10,7 @@ import {
 } from "@clerk/clerk-react";
 import { Toaster, toast } from "react-hot-toast";
 import VideoRecorder from "../components/VideoRecorder";
-import logo from '../assets/logo.png';
+
 
 const InterviewSessionPage = () => {
   const { id } = useParams();
@@ -129,13 +129,7 @@ const InterviewSessionPage = () => {
       <Toaster position="top-center" />
       <nav className="flex items-center justify-between px-4 md:px-12 py-5 bg-white shadow-sm w-full mb-8">
         <div className="flex items-center gap-2">
-          <img
-            src={logo}
-            alt="logo"
-            className="h-7 w-auto cursor-pointer"
-            style={{ borderRadius: 0 }}
-            onClick={() => window.location.href = '/dashboard'}
-          />
+          
           <span
             className="text-2xl font-extrabold text-[#6c47ff] tracking-tight cursor-pointer"
             onClick={() => (window.location.href = "/dashboard")}
