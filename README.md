@@ -65,7 +65,8 @@ AI Interview Prep is a full-stack web application that helps users practice and 
 ## Screenshots
 
 <img width="1914" height="975" alt="image" src="https://github.com/user-attachments/assets/958d3db2-a550-4654-a37a-d658f93bc359" />
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/bc0c8f13-3b62-4b14-8921-fadf2cbdfd10" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/b59aece6-b9b9-48c1-af41-c223f93e94ce" />
+
 
 <img width="1824" height="855" alt="image" src="https://github.com/user-attachments/assets/eb0345ee-346f-490f-ba77-fea44c992a93" />
 <img width="1655" height="958" alt="image" src="https://github.com/user-attachments/assets/77209f8a-1d49-48cc-9050-9e9f353cfafd" />
